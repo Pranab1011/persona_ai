@@ -29,4 +29,3 @@ class ClusterStats:
         final_df = aggregates.merge(ranges, on=label_column, how="left")
 
         return final_df
-

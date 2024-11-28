@@ -1,7 +1,7 @@
 import pandas as pd
 
-from abstract import BaseFeatureEngineer
-from features_utils import *
+from .abstract import BaseFeatureEngineer
+from .features_utils import *
 
 
 class FeatureEngineer(BaseFeatureEngineer):
@@ -15,6 +15,9 @@ class FeatureEngineer(BaseFeatureEngineer):
         self.n_months = purchase_window_months
         self.n_weeks = purchase_window_weeks
         self.config = load_features_config()
+        self.data.columns = self.data.columns.str.strip().str.lower().str.replace(' ', '_')
+
+        # print(self.data.columns)
 
     def get_latest_purchase_date(self):
         latest_purchase = (
@@ -27,13 +30,13 @@ class FeatureEngineer(BaseFeatureEngineer):
         )
 
     def get_n_months_cutoff(self):
-        self.data["three_month_cutoff"] = self.data[
+        self.data[f"{self.n_months}_month_cutoff"] = self.data[
             "latest_purchase_date"
         ] - pd.DateOffset(months=self.n_months)
 
     def get_last_n_months_total_purchase_amount(self):
         self.get_latest_purchase_date()
-        self.get_n_months_cutoff(self.n_months)
+        self.get_n_months_cutoff()
         data_last_n_months = self.data[
             self.data["purchase_date"] >= self.data[f"{self.n_months}_month_cutoff"]
         ]
@@ -86,6 +89,8 @@ class FeatureEngineer(BaseFeatureEngineer):
             self.data[f"month_{i}_start"] = self.data[
                 "latest_purchase_date"
             ] - pd.DateOffset(months=i)
+
+        for i in range(1, self.n_months + 1):
             if i < self.n_months:
                 self.data[f"month_{i}_end"] = self.data[
                     f"month_{i + 1}_start"
@@ -140,6 +145,8 @@ class FeatureEngineer(BaseFeatureEngineer):
             self.data[f"week_{i}_start"] = self.data[
                 "latest_purchase_date"
             ] - pd.DateOffset(weeks=i)
+
+        for i in range(1, self.n_weeks + 1):
             if i < self.n_weeks:
                 self.data[f"week_{i}_end"] = self.data[
                     f"week_{i + 1}_start"
@@ -216,7 +223,9 @@ class FeatureEngineer(BaseFeatureEngineer):
     def one_hot_encode_columns(self, columns_to_encode):
         """One-hot encodes specified columns in a DataFrame."""
 
-        self.data = self.data.copy()  # Create a copy to avoid modifying the original DataFrame
+        self.data = (
+            self.data.copy()
+        )  # Create a copy to avoid modifying the original DataFrame
 
         for col in columns_to_encode:
             if col in self.data.columns:
@@ -227,16 +236,40 @@ class FeatureEngineer(BaseFeatureEngineer):
                 print(f"Warning: Column '{col}' not found in the DataFrame.")
 
     def fit(self):
+        self.get_last_n_months_total_purchase_amount()
         self.get_last_n_months_avg_purchase_amount()
         self.get_last_n_months_purchase_amount_by_month()
         self.get_last_n_weeks_purchase_amount_by_week()
         self.get_category_counts()
         self.get_most_common_payment_method()
-        self.one_hot_encode_columns(self.config.get('columns_to_encode'))
+        self.one_hot_encode_columns(self.config.get("columns_to_encode"))
+        self.data.columns = self.data.columns.str.strip().str.lower().str.replace(' ', '_')
 
     def transform(self) -> pd.DataFrame:
-        columns_to_use = self.config.get('columns_to_use')
-        return self.data[columns_to_use]
+        columns_to_use = self.config.get("columns_to_use")
+        user_behavior_data = self.data[columns_to_use]
+        user_behavior_data = user_behavior_data.drop_duplicates()
+        return user_behavior_data
 
     def get_feature_names(self) -> list:
         pass
+
+
+class RunFeatureEngineering:
+    def __init__(self, datasource: str):
+        self.datasource = datasource
+        self.config = load_features_config()
+
+    def process(self) -> pd.DataFrame:
+        if self.datasource == "orion":
+            datapath = self.config.get("orion_data_path")
+        else:
+            raise f"Feature Engineering not set up for the datasource {self.datasource}"
+
+        input_data = pd.read_csv(datapath)
+        fe = FeatureEngineer(
+            data=input_data, purchase_window_months=3, purchase_window_weeks=4
+        )
+        fe.fit()
+        features = fe.transform()
+        return features

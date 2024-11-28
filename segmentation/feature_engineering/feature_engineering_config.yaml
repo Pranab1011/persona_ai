@@ -1,9 +1,10 @@
-orion_data_path: "../data/orion_customer_data.csv"
+orion_data_path: "segmentation/data/orion_customer_data.csv"
 
 columns_to_use:
   - customer_id
   - customer_age
-  - gender
+  - gender_male
+  - gender_female
   - total_purchase_last_3_months
   - purchase_month_1
   - purchase_month_2
@@ -12,11 +13,14 @@ columns_to_use:
   - purchase_week_2
   - purchase_week_3
   - purchase_week_4
-  - category_Books
-  - category_Clothing
-  - category_Electronics
-  - category_Home
-  - most_common_payment_method
+  - category_books
+  - category_clothing
+  - category_electronics
+  - category_home
+  - most_common_payment_method_cash
+  - most_common_payment_method_credit_card
+  - most_common_payment_method_crypto
+  - most_common_payment_method_paypal
 
 columns_to_encode:
   - gender
@@ -34,14 +38,14 @@ numerical_features:
   - purchase_week_4
 
 one_hot_encoded_features:
-  - category_Books
-  - category_Clothing
-  - category_Electronics
-  - category_Home
-  - gender_Female
-  - gender_Male
-  - most_common_payment_method_Cash
-  - most_common_payment_method_Credit Card
-  - most_common_payment_method_Crypto
-  - most_common_payment_method_PayPal
+  - category_books
+  - category_clothing
+  - category_electronics
+  - category_home
+  - gender_female
+  - gender_male
+  - most_common_payment_method_cash
+  - most_common_payment_method_credit_card
+  - most_common_payment_method_crypto
+  - most_common_payment_method_paypal
 

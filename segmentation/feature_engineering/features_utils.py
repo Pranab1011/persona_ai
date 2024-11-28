@@ -28,4 +28,4 @@ def load_yaml(filepath):
 
 
 def load_features_config():
-    return load_yaml('feature_engineering_config.yaml')
+    return load_yaml("segmentation/feature_engineering/feature_engineering_config.yaml")

@@ -53,6 +53,3 @@ class PersonaGenerator:
         llm_input = self.persona_prompt.prompt.format(**stats_dict)
         persona = self.llm(llm_input)
         return persona
-
-
-
