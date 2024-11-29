@@ -1,4 +1,5 @@
 import pandas as pd
+import yaml
 
 
 # Load and preprocess data
@@ -27,4 +28,4 @@ def load_yaml(filepath):
 
 
 def load_train_config():
-    return load_yaml("orion_training_config.yaml")
+    return load_yaml("segmentation/training/orion_training_config.yaml")

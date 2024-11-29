@@ -15,7 +15,9 @@ class FeatureEngineer(BaseFeatureEngineer):
         self.n_months = purchase_window_months
         self.n_weeks = purchase_window_weeks
         self.config = load_features_config()
-        self.data.columns = self.data.columns.str.strip().str.lower().str.replace(' ', '_')
+        self.data.columns = (
+            self.data.columns.str.strip().str.lower().str.replace(" ", "_")
+        )
 
         # print(self.data.columns)
 
@@ -243,7 +245,9 @@ class FeatureEngineer(BaseFeatureEngineer):
         self.get_category_counts()
         self.get_most_common_payment_method()
         self.one_hot_encode_columns(self.config.get("columns_to_encode"))
-        self.data.columns = self.data.columns.str.strip().str.lower().str.replace(' ', '_')
+        self.data.columns = (
+            self.data.columns.str.strip().str.lower().str.replace(" ", "_")
+        )
 
     def transform(self) -> pd.DataFrame:
         columns_to_use = self.config.get("columns_to_use")

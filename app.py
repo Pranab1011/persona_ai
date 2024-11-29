@@ -9,7 +9,7 @@ personas = {
             "Age": 33,
             "Gender": "Female",
             "Occupation": "Mid-level Professional",
-            "Income": "$100000"
+            "Income": "$100000",
         },
         "behavioral_traits": {
             "Purchase Habits": "Spends large amounts in short bursts, prefers credit card payments.",
@@ -50,7 +50,8 @@ for key, value in persona_data["demographics"].items():
     st.sidebar.write(f"**{key}:** {value}")
 
 # Custom CSS to apply borders, colors, and fonts
-st.markdown("""
+st.markdown(
+    """
     <style>
     h1 {
         font-family: 'Georgia', serif; /* Change the font */
@@ -118,7 +119,9 @@ st.markdown("""
     }
 
     </style>
-    """, unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True,
+)
 
 # Main body with 4 sections
 st.header(f"Persona: {selected_persona}")

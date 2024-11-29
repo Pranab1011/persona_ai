@@ -10,16 +10,16 @@ numerical_features:
   - purchase_week_4
 
 one_hot_encoded_features:
-  - category_Books
-  - category_Clothing
-  - category_Electronics
-  - category_Home
-  - gender_Female
-  - gender_Male
-  - most_common_payment_method_Cash
-  - most_common_payment_method_Credit Card
-  - most_common_payment_method_Crypto
-  - most_common_payment_method_PayPal
+  - category_books
+  - category_clothing
+  - category_electronics
+  - category_home
+  - gender_female
+  - gender_male
+  - most_common_payment_method_cash
+  - most_common_payment_method_credit_card
+  - most_common_payment_method_crypto
+  - most_common_payment_method_paypal
 
 eps: 2.2
 min_samples: 10
@@ -36,16 +36,16 @@ avg_columns:
   - purchase_week_4
 
 sum_columns:
-  - category_Books
-  - category_Clothing
-  - category_Electronics
-  - category_Home
-  - gender_Female
-  - gender_Male
-  - most_common_payment_method_Cash
-  - most_common_payment_method_Credit Card
-  - most_common_payment_method_Crypto
-  - most_common_payment_method_PayPal
+  - category_books
+  - category_clothing
+  - category_electronics
+  - category_home
+  - gender_female
+  - gender_male
+  - most_common_payment_method_cash
+  - most_common_payment_method_credit_card
+  - most_common_payment_method_crypto
+  - most_common_payment_method_paypal
 
 range_columns:
   - customer_age
