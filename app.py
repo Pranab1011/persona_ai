@@ -1,4 +1,6 @@
 import streamlit as st
+import pandas as pd
+from app_config import *
 
 # Define persona data
 personas = {
@@ -32,8 +34,26 @@ personas = {
             "Designed for Women Who Lead!",
         ],
     },
-    # Add more customer segments as needed
 }
+
+persona_df = pd.read_csv("segmentation/data/orion_personas.csv")
+
+
+def generate_persona_json(persona_df):
+    personas = {}
+    for i in range(persona_df.shape[0]):
+        persona_dict = persona_df.iloc[i, :]
+        this_persona = {}
+        for key, value in persona_groupings.items():
+            this_persona[key] = {item: persona_dict.get(item) for item in value}
+
+        this_persona["image"] = "personas/data/images/Tech-Savvy-Power-Shopper.png"
+        personas[persona_dict.get("persona_name")] = this_persona
+
+    return personas
+
+
+personas = generate_persona_json(persona_df)
 
 # Streamlit app layout
 st.title("CUSTOMER PERSONA VIEWER")
@@ -44,7 +64,8 @@ selected_persona = st.sidebar.selectbox("Choose Persona", list(personas.keys()))
 
 # Display persona image and demographics
 persona_data = personas[selected_persona]
-st.sidebar.image(persona_data["image"], caption=selected_persona, use_column_width=True)
+print(persona_data)
+st.sidebar.image(persona_data["image"], caption=selected_persona, use_container_width=True)
 st.sidebar.subheader("Demographics")
 for key, value in persona_data["demographics"].items():
     st.sidebar.write(f"**{key}:** {value}")
@@ -152,7 +173,7 @@ display_section("Marketing Strategy", persona_data["marketing_strategy"])
 taglines_html = f"""
 <div class="section">
     <h3>Suggested Taglines for Engagement</h3>
-    {''.join([f'<p>- {tagline}</p>' for tagline in persona_data["taglines"]])}
+    {''.join([f'<p>- {tagline}</p>' for tagline in persona_data["taglines"].values()])}
 </div>
 """
 st.markdown(taglines_html, unsafe_allow_html=True)

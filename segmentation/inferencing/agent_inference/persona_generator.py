@@ -2,7 +2,12 @@ from langchain_community.chat_models import ChatOpenAI
 from langchain_core.prompts import (
     ChatPromptTemplate,
     FewShotChatMessagePromptTemplate,
+    PromptTemplate,
 )
+from langchain_openai import OpenAI
+from langchain.chains import LLMChain
+from langchain_community.utilities.dalle_image_generator import DallEAPIWrapper
+
 from .llm_config import *
 import ast
 import warnings
@@ -34,6 +39,14 @@ class PromptGenerator:
             [("system", persona_prompt_prefix), few_shot_prompt, ("human", "{input}")]
         )
 
+    def generate_image_prompt(self):
+        llm = OpenAI(temperature=0.9)
+        prompt = PromptTemplate(
+            input_variables=["image_desc"],
+            template="Generate a detailed prompt to generate an image based on the following description: {image_desc}",
+        )
+        chain = LLMChain(llm=llm, prompt=prompt)
+
 
 class PersonaGenerator:
     def __init__(self, persona_prompt: PromptGenerator):
@@ -42,7 +55,7 @@ class PersonaGenerator:
         self.set_up_llm()
 
     def set_up_llm(self):
-        self.chain = self.persona_prompt.prompt | ChatOpenAI(model_name='gpt-4')
+        self.chain = self.persona_prompt.prompt | ChatOpenAI(model_name="gpt-4")
 
     def get_persona_details(self, stats_dict: dict):
         persona = self.chain.invoke({"input": str(stats_dict)})

@@ -25,7 +25,9 @@ if __name__ == "__main__":
     persona_list = []
 
     for i in tqdm(range(segments_stats.shape[0])):
-        persona_str = persona_gen.get_persona_details(segments_stats.iloc[1, :].to_dict())
+        persona_str = persona_gen.get_persona_details(
+            segments_stats.iloc[1, :].to_dict()
+        )
         persona_json = parse_persona(persona_str.content)
         persona_list.append(persona_json)
 
